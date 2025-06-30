@@ -11,11 +11,12 @@ import { searchPlaces, MapboxError } from '@/lib/mapbox';
 import { MapboxFeature, Location } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
-interface LocationSearchProps {
+export interface LocationSearchProps {
   onLocationAdd: (location: Location) => void;
+  mapboxToken?: string;
 }
 
-export function LocationSearch({ onLocationAdd }: LocationSearchProps) {
+export function LocationSearch({ onLocationAdd, mapboxToken }: LocationSearchProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<MapboxFeature[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,8 +24,6 @@ export function LocationSearch({ onLocationAdd }: LocationSearchProps) {
   const [showDropdown, setShowDropdown] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

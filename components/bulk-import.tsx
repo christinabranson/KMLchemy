@@ -7,13 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { searchPlaces, MapboxError } from '@/lib/mapbox';
 import { Location } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
-interface BulkImportProps {
+export interface BulkImportProps {
   onLocationsAdd: (locations: Location[]) => void;
+  mapboxToken?: string;
 }
 
 interface ImportResult {
@@ -23,51 +23,45 @@ interface ImportResult {
   status: 'pending' | 'success' | 'error';
 }
 
-export function BulkImport({ onLocationsAdd }: BulkImportProps) {
+export function BulkImport({ onLocationsAdd, mapboxToken }: BulkImportProps) {
   const [inputText, setInputText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [results, setResults] = useState<ImportResult[]>([]);
   const [progress, setProgress] = useState(0);
   const [showResults, setShowResults] = useState(false);
 
-  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-
   const parseAddresses = (text: string): string[] => {
-    // Split by newlines and filter out empty lines
-    const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+    if (!text.trim()) return [];
     
-    // If it looks like CSV, try to extract addresses from each line
     const addresses: string[] = [];
+    const lines = text.split('\n');
     
     for (const line of lines) {
-      if (line.includes(',') && line.includes('"')) {
-        // Handle CSV with quotes
-        const csvMatch = line.match(/"([^"]+)"/g);
-        if (csvMatch) {
-          addresses.push(...csvMatch.map(match => match.replace(/"/g, '')));
-        } else {
-          // Fallback: split by comma and take the longest part (likely the address)
-          const parts = line.split(',').map(p => p.trim());
-          const longestPart = parts.reduce((a, b) => a.length > b.length ? a : b);
-          if (longestPart.length > 5) {
-            addresses.push(longestPart);
-          }
+      const trimmedLine = line.trim();
+      if (!trimmedLine) continue;
+      
+      // Handle CSV format: "name", "address"
+      if (trimmedLine.includes('","')) {
+        const parts = trimmedLine.split('","');
+        if (parts.length >= 2) {
+          const address = parts[1].replace(/"/g, '').trim();
+          if (address) addresses.push(address);
+          continue;
         }
-      } else if (line.includes(',')) {
-        // Simple CSV - split and take parts that look like addresses
-        const parts = line.split(',').map(p => p.trim());
-        for (const part of parts) {
-          if (part.length > 10 && (part.includes(' ') || part.match(/\d/))) {
-            addresses.push(part);
-          }
-        }
-      } else {
-        // Single address per line
-        addresses.push(line);
       }
+      
+      // Handle quoted strings
+      if (trimmedLine.startsWith('"') && trimmedLine.endsWith('"')) {
+        const address = trimmedLine.slice(1, -1).trim();
+        if (address) addresses.push(address);
+        continue;
+      }
+      
+      // Single address per line
+      addresses.push(trimmedLine);
     }
     
-    return [...new Set(addresses)]; // Remove duplicates
+    return Array.from(new Set(addresses)); // Remove duplicates
   };
 
   const geocodeAddress = async (address: string): Promise<Location | null> => {
@@ -262,7 +256,12 @@ export function BulkImport({ onLocationsAdd }: BulkImportProps) {
               <span className="text-kmlchemy-navy">Processing addresses...</span>
               <span className="text-kmlchemy-green font-medium">{Math.round(progress)}%</span>
             </div>
-            <Progress value={progress} className="h-2" />
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className="bg-kmlchemy-green h-2 rounded-full transition-all duration-300" 
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </div>
         )}
 
