@@ -5,6 +5,7 @@ import { Settings } from 'lucide-react';
 import { LocationSearch } from '@/components/location-search';
 import { LocationList } from '@/components/location-list';
 import { ExportSection } from '@/components/export-section';
+import { BulkImport } from '@/components/bulk-import';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Location } from '@/lib/types';
 import Image from 'next/image';
@@ -20,6 +21,21 @@ export default function Home() {
     setLocations(prev => [...prev, location]);
   };
 
+  const handleLocationsAdd = (newLocations: Location[]) => {
+    // Filter out duplicates based on coordinates (with small tolerance for floating point comparison)
+    const filteredLocations = newLocations.filter(newLoc => {
+      return !locations.some(existingLoc => {
+        const latDiff = Math.abs(existingLoc.coordinates.latitude - newLoc.coordinates.latitude);
+        const lonDiff = Math.abs(existingLoc.coordinates.longitude - newLoc.coordinates.longitude);
+        return latDiff < 0.0001 && lonDiff < 0.0001; // ~10 meter tolerance
+      });
+    });
+    
+    if (filteredLocations.length > 0) {
+      setLocations(prev => [...prev, ...filteredLocations]);
+    }
+  };
+
   const handleLocationRemove = (id: string) => {
     setLocations(prev => prev.filter(loc => loc.id !== id));
   };
@@ -28,7 +44,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-stone-50 to-slate-100">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-4 mb-4">
@@ -65,13 +81,19 @@ export default function Home() {
 
         <div className="grid gap-6">
           {/* Search Section */}
-          <div className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Individual Search */}
             <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 border border-kmlchemy-green/10 shadow-sm">
               <h2 className="text-xl font-semibold mb-2 text-kmlchemy-navy">Search Locations</h2>
               <p className="text-sm text-muted-foreground mb-4">
                 Find businesses like "Starbucks Philadelphia" or "McDonald's Times Square". Also works with addresses and landmarks.
               </p>
               <LocationSearch onLocationAdd={handleLocationAdd} />
+            </div>
+
+            {/* Bulk Import */}
+            <div className="space-y-4">
+              <BulkImport onLocationsAdd={handleLocationsAdd} />
             </div>
           </div>
 
