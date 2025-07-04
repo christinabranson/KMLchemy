@@ -41,33 +41,33 @@ export function ExportSection({ locations }: ExportSectionProps) {
   };
 
   return (
-    <Card className="border-kmlchemy-green/20 shadow-sm bg-white/80 backdrop-blur-sm">
+    <Card className="border-kmlchemy-green/20 shadow-sm bg-white/80 backdrop-blur-sm" data-testid="export-section">
       <CardHeader className="pb-4">
-        <CardTitle className="flex items-center gap-2 text-kmlchemy-navy">
-          <FileText className="h-5 w-5 text-kmlchemy-green" />
+        <CardTitle className="flex items-center gap-2 text-kmlchemy-navy" data-testid="export-section-title">
+          <FileText className="h-5 w-5 text-kmlchemy-green" data-testid="export-section-title-icon" />
           Export to KML
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="text-sm text-muted-foreground">
+      <CardContent className="space-y-4" data-testid="export-section-content">
+        <div className="text-sm text-muted-foreground" data-testid="export-section-description">
           Transform your selected locations into a KML file that can be opened in Google Earth, 
           Google Maps, or other mapping applications. Perfect for sharing routes, marking points of interest, 
           or creating custom maps.
         </div>
 
         {exportStatus === 'success' && (
-          <Alert className="border-green-200 bg-green-50">
+          <Alert className="border-green-200 bg-green-50" data-testid="export-success-alert">
             <CheckCircle className="h-4 w-4 text-green-600" />
-            <AlertDescription className="text-green-800">
+            <AlertDescription className="text-green-800" data-testid="export-success-message">
               KML file exported successfully! Your locations have been transformed into a portable map file.
             </AlertDescription>
           </Alert>
         )}
 
         {exportStatus === 'error' && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" data-testid="export-error-alert">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
+            <AlertDescription data-testid="export-error-message">
               Failed to export KML file. Please try again.
             </AlertDescription>
           </Alert>
@@ -78,13 +78,14 @@ export function ExportSection({ locations }: ExportSectionProps) {
           disabled={locations.length === 0 || isExporting}
           className="w-full bg-gradient-to-r from-kmlchemy-green to-kmlchemy-navy hover:from-kmlchemy-green/90 hover:to-kmlchemy-navy/90 text-white shadow-md hover:shadow-lg transition-all duration-200"
           size="lg"
+          data-testid="export-button"
         >
           <Download className="h-4 w-4 mr-2" />
           {isExporting ? 'Transforming...' : `Export ${locations.length} Location${locations.length === 1 ? '' : 's'}`}
         </Button>
 
         {locations.length === 0 && (
-          <p className="text-xs text-muted-foreground text-center">
+          <p className="text-xs text-muted-foreground text-center" data-testid="export-no-locations-message">
             Add some locations to enable KML transformation
           </p>
         )}

@@ -174,23 +174,23 @@ export function BulkImport({ onLocationsAdd, mapboxToken }: BulkImportProps) {
 "Golden Gate Bridge, San Francisco, CA"`;
 
   return (
-    <Card className="border-kmlchemy-green/20 shadow-sm bg-white/80 backdrop-blur-sm">
+    <Card className="border-kmlchemy-green/20 shadow-sm bg-white/80 backdrop-blur-sm" data-testid="bulk-import">
       <CardHeader className="pb-4">
-        <CardTitle className="flex items-center gap-2 text-kmlchemy-navy">
-          <Upload className="h-5 w-5 text-kmlchemy-green" />
+        <CardTitle className="flex items-center gap-2 text-kmlchemy-navy" data-testid="bulk-import-title">
+          <Upload className="h-5 w-5 text-kmlchemy-green" data-testid="bulk-import-title-icon" />
           Bulk Import Addresses
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="text-sm text-muted-foreground">
+      <CardContent className="space-y-4" data-testid="bulk-import-content">
+        <div className="text-sm text-muted-foreground" data-testid="bulk-import-description">
           Paste a list of addresses, business names, or places. Supports CSV format, 
           one address per line, or mixed formats. Each address will be geocoded automatically.
         </div>
 
         {!mapboxToken && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" data-testid="bulk-import-no-token-alert">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
+            <AlertDescription data-testid="bulk-import-no-token-message">
               Mapbox token is required for bulk geocoding. Please configure your API token.
             </AlertDescription>
           </Alert>
@@ -198,7 +198,7 @@ export function BulkImport({ onLocationsAdd, mapboxToken }: BulkImportProps) {
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-kmlchemy-navy">
+            <label className="text-sm font-medium text-kmlchemy-navy" data-testid="bulk-import-label">
               Addresses to Import
             </label>
             <Button
@@ -206,6 +206,7 @@ export function BulkImport({ onLocationsAdd, mapboxToken }: BulkImportProps) {
               size="sm"
               onClick={() => setInputText(exampleText)}
               className="text-xs text-kmlchemy-green hover:text-kmlchemy-navy hover:bg-kmlchemy-green/10"
+              data-testid="bulk-import-use-example-button"
             >
               <Copy className="h-3 w-3 mr-1" />
               Use Example
@@ -217,6 +218,7 @@ export function BulkImport({ onLocationsAdd, mapboxToken }: BulkImportProps) {
             onChange={(e) => setInputText(e.target.value)}
             className="min-h-32 border-kmlchemy-green/20 focus:border-kmlchemy-green focus:ring-kmlchemy-green/20"
             disabled={isProcessing}
+            data-testid="bulk-import-textarea"
           />
         </div>
 
@@ -225,6 +227,7 @@ export function BulkImport({ onLocationsAdd, mapboxToken }: BulkImportProps) {
             onClick={handleBulkImport}
             disabled={!inputText.trim() || isProcessing || !mapboxToken}
             className="flex-1 bg-gradient-to-r from-kmlchemy-green to-kmlchemy-navy hover:from-kmlchemy-green/90 hover:to-kmlchemy-navy/90 text-white"
+            data-testid="bulk-import-button"
           >
             {isProcessing ? (
               <>
@@ -244,6 +247,7 @@ export function BulkImport({ onLocationsAdd, mapboxToken }: BulkImportProps) {
               onClick={handleClear}
               disabled={isProcessing}
               className="border-kmlchemy-green/20 text-kmlchemy-navy hover:bg-kmlchemy-green/10"
+              data-testid="bulk-import-clear-button"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -251,36 +255,37 @@ export function BulkImport({ onLocationsAdd, mapboxToken }: BulkImportProps) {
         </div>
 
         {isProcessing && (
-          <div className="space-y-2">
+          <div className="space-y-2" data-testid="bulk-import-progress">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-kmlchemy-navy">Processing addresses...</span>
-              <span className="text-kmlchemy-green font-medium">{Math.round(progress)}%</span>
+              <span className="text-kmlchemy-navy" data-testid="bulk-import-progress-text">Processing addresses...</span>
+              <span className="text-kmlchemy-green font-medium" data-testid="bulk-import-progress-percentage">{Math.round(progress)}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-gray-200 rounded-full h-2" data-testid="bulk-import-progress-bar">
               <div 
                 className="bg-kmlchemy-green h-2 rounded-full transition-all duration-300" 
                 style={{ width: `${progress}%` }}
+                data-testid="bulk-import-progress-fill"
               />
             </div>
           </div>
         )}
 
         {showResults && results.length > 0 && (
-          <div className="space-y-3">
+          <div className="space-y-3" data-testid="bulk-import-results">
             <div className="flex items-center gap-4 text-sm">
               <div className="flex items-center gap-1">
                 <CheckCircle className="h-4 w-4 text-green-600" />
-                <span className="text-green-700 font-medium">{successCount} successful</span>
+                <span className="text-green-700 font-medium" data-testid="bulk-import-success-count">{successCount} successful</span>
               </div>
               {errorCount > 0 && (
                 <div className="flex items-center gap-1">
                   <AlertCircle className="h-4 w-4 text-red-500" />
-                  <span className="text-red-600 font-medium">{errorCount} failed</span>
+                  <span className="text-red-600 font-medium" data-testid="bulk-import-error-count">{errorCount} failed</span>
                 </div>
               )}
             </div>
 
-            <div className="max-h-48 overflow-y-auto space-y-2 border border-kmlchemy-green/10 rounded-lg p-3 bg-kmlchemy-green/5">
+            <div className="max-h-48 overflow-y-auto space-y-2 border border-kmlchemy-green/10 rounded-lg p-3 bg-kmlchemy-green/5" data-testid="bulk-import-results-list">
               {results.map((result, index) => (
                 <div
                   key={index}
@@ -290,6 +295,7 @@ export function BulkImport({ onLocationsAdd, mapboxToken }: BulkImportProps) {
                     result.status === 'error' && "bg-red-50 border border-red-200",
                     result.status === 'pending' && "bg-gray-50 border border-gray-200"
                   )}
+                  data-testid={`bulk-import-result-${index}`}
                 >
                   <div className="flex-shrink-0 mt-0.5">
                     {result.status === 'success' && <CheckCircle className="h-4 w-4 text-green-600" />}
@@ -297,16 +303,16 @@ export function BulkImport({ onLocationsAdd, mapboxToken }: BulkImportProps) {
                     {result.status === 'pending' && <Loader2 className="h-4 w-4 text-gray-400 animate-spin" />}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-medium truncate text-kmlchemy-navy">
+                    <div className="font-medium truncate text-kmlchemy-navy" data-testid={`bulk-import-result-original-${index}`}>
                       {result.original}
                     </div>
                     {result.location && (
-                      <div className="text-xs text-kmlchemy-green mt-1 truncate">
+                      <div className="text-xs text-kmlchemy-green mt-1 truncate" data-testid={`bulk-import-result-location-${index}`}>
                         → {result.location.name} • {result.location.address}
                       </div>
                     )}
                     {result.error && (
-                      <div className="text-xs text-red-600 mt-1">
+                      <div className="text-xs text-red-600 mt-1" data-testid={`bulk-import-result-error-${index}`}>
                         {result.error}
                       </div>
                     )}
@@ -316,9 +322,9 @@ export function BulkImport({ onLocationsAdd, mapboxToken }: BulkImportProps) {
             </div>
 
             {successCount > 0 && !isProcessing && (
-              <Alert className="border-green-200 bg-green-50">
+              <Alert className="border-green-200 bg-green-50" data-testid="bulk-import-success-alert">
                 <CheckCircle className="h-4 w-4 text-green-600" />
-                <AlertDescription className="text-green-800">
+                <AlertDescription className="text-green-800" data-testid="bulk-import-success-message">
                   Successfully imported {successCount} location{successCount === 1 ? '' : 's'}! 
                   {errorCount > 0 && ` ${errorCount} address${errorCount === 1 ? '' : 'es'} could not be found.`}
                 </AlertDescription>

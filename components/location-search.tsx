@@ -140,9 +140,9 @@ export function LocationSearch({ onLocationAdd, mapboxToken }: LocationSearchPro
 
   if (!mapboxToken) {
     return (
-      <Alert variant="destructive">
+      <Alert variant="destructive" data-testid="location-search-no-token-alert">
         <AlertCircle className="h-4 w-4" />
-        <AlertDescription>
+        <AlertDescription data-testid="location-search-no-token-message">
           Mapbox token is not configured. Please add NEXT_PUBLIC_MAPBOX_TOKEN to your .env.local file.
         </AlertDescription>
       </Alert>
@@ -150,38 +150,40 @@ export function LocationSearch({ onLocationAdd, mapboxToken }: LocationSearchPro
   }
 
   return (
-    <div className="relative" ref={dropdownRef}>
-      <form onSubmit={handleSubmit} className="flex gap-2">
+    <div className="relative" ref={dropdownRef} data-testid="location-search-container">
+      <form onSubmit={handleSubmit} className="flex gap-2" data-testid="location-search-form">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-kmlchemy-green h-4 w-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-kmlchemy-green h-4 w-4" data-testid="location-search-icon" />
           <Input
             placeholder="Search businesses: 'Starbucks Philadelphia' or 'pizza near Times Square'"
             value={query}
             onChange={(e) => handleInputChange(e.target.value)}
             className="pl-10 pr-10 border-kmlchemy-green/20 focus:border-kmlchemy-green focus:ring-kmlchemy-green/20"
+            data-testid="location-search-input"
           />
           {isLoading && (
-            <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 animate-spin text-kmlchemy-green" />
+            <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 animate-spin text-kmlchemy-green" data-testid="location-search-loading" />
           )}
         </div>
         <Button 
           type="submit" 
           disabled={isLoading || !query.trim()}
           className="bg-kmlchemy-navy hover:bg-kmlchemy-navy/90 text-white"
+          data-testid="location-search-button"
         >
           Search
         </Button>
       </form>
 
       {error && (
-        <Alert variant="destructive" className="mt-2">
+        <Alert variant="destructive" className="mt-2" data-testid="location-search-error">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription data-testid="location-search-error-message">{error}</AlertDescription>
         </Alert>
       )}
 
       {showDropdown && results.length > 0 && (
-        <Card className="absolute top-full left-0 right-0 mt-1 z-50 max-h-80 overflow-y-auto shadow-lg border-2 border-kmlchemy-green/20 bg-white/95 backdrop-blur-sm">
+        <Card className="absolute top-full left-0 right-0 mt-1 z-50 max-h-80 overflow-y-auto shadow-lg border-2 border-kmlchemy-green/20 bg-white/95 backdrop-blur-sm" data-testid="location-search-dropdown">
           <div className="p-1">
             {results.map((result) => (
               <button
@@ -192,6 +194,7 @@ export function LocationSearch({ onLocationAdd, mapboxToken }: LocationSearchPro
                   "transition-colors duration-150 focus:outline-none focus:bg-kmlchemy-green/10 focus:text-kmlchemy-navy",
                   "border-b border-kmlchemy-green/10 last:border-b-0"
                 )}
+                data-testid={`location-search-result-${result.id}`}
               >
                 <div className="flex items-start gap-3">
                   <div className="flex-shrink-0 mt-0.5">
@@ -199,7 +202,7 @@ export function LocationSearch({ onLocationAdd, mapboxToken }: LocationSearchPro
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <div className="font-semibold text-sm truncate text-kmlchemy-navy">{result.text}</div>
+                      <div className="font-semibold text-sm truncate text-kmlchemy-navy" data-testid={`location-search-result-name-${result.id}`}>{result.text}</div>
                       <Badge 
                         variant={result.place_type.includes('poi') ? 'default' : 'secondary'} 
                         className={cn(
@@ -208,15 +211,16 @@ export function LocationSearch({ onLocationAdd, mapboxToken }: LocationSearchPro
                             ? "bg-kmlchemy-navy text-white" 
                             : "bg-kmlchemy-green/10 text-kmlchemy-green border-kmlchemy-green/20"
                         )}
+                        data-testid={`location-search-result-type-${result.id}`}
                       >
                         {getPlaceTypeLabel(result.place_type, result.properties)}
                       </Badge>
                     </div>
-                    <div className="text-xs text-muted-foreground truncate">
+                    <div className="text-xs text-muted-foreground truncate" data-testid={`location-search-result-address-${result.id}`}>
                       {result.place_name}
                     </div>
                     {result.properties?.category && (
-                      <div className="text-xs text-kmlchemy-green mt-1 font-medium">
+                      <div className="text-xs text-kmlchemy-green mt-1 font-medium" data-testid={`location-search-result-category-${result.id}`}>
                         {result.properties.category.replace(/_/g, ' ').toUpperCase()}
                       </div>
                     )}
@@ -229,8 +233,8 @@ export function LocationSearch({ onLocationAdd, mapboxToken }: LocationSearchPro
       )}
 
       {showDropdown && results.length === 0 && !isLoading && (
-        <Card className="absolute top-full left-0 right-0 mt-1 z-50 shadow-lg border-kmlchemy-green/20 bg-white/95 backdrop-blur-sm">
-          <div className="p-4 text-center text-sm text-muted-foreground">
+        <Card className="absolute top-full left-0 right-0 mt-1 z-50 shadow-lg border-kmlchemy-green/20 bg-white/95 backdrop-blur-sm" data-testid="location-search-no-results">
+          <div className="p-4 text-center text-sm text-muted-foreground" data-testid="location-search-no-results-message">
             No results found. Try a different search term.
           </div>
         </Card>
