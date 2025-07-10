@@ -1,0 +1,65 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "id": "poi.123456789",
+      "type": "Feature",
+      "place_type": ["poi"],
+      "relevance": 0.99,
+      "properties": {
+        "category": "coffee_shop",
+        "maki": "cafe",
+        "address": "123 Main St",
+        "city": "Philadelphia",
+        "state": "PA"
+      },
+      "text": "Starbucks",
+      "place_name": "Starbucks, 123 Main St, Philadelphia, PA 19102, United States",
+      "center": [-75.1652, 39.9526],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-75.1652, 39.9526]
+      }
+    },
+    {
+      "id": "poi.987654321",
+      "type": "Feature",
+      "place_type": ["poi"],
+      "relevance": 0.95,
+      "properties": {
+        "category": "coffee_shop",
+        "maki": "cafe",
+        "address": "456 Market St",
+        "city": "Philadelphia",
+        "state": "PA"
+      },
+      "text": "Starbucks",
+      "place_name": "Starbucks, 456 Market St, Philadelphia, PA 19106, United States",
+      "center": [-75.1500, 39.9500],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-75.1500, 39.9500]
+      }
+    },
+    {
+      "id": "poi.555666777",
+      "type": "Feature",
+      "place_type": ["poi"],
+      "relevance": 0.90,
+      "properties": {
+        "category": "restaurant",
+        "maki": "restaurant",
+        "address": "789 Broad St",
+        "city": "Philadelphia",
+        "state": "PA"
+      },
+      "text": "McDonald's",
+      "place_name": "McDonald's, 789 Broad St, Philadelphia, PA 19107, United States",
+      "center": [-75.1600, 39.9480],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-75.1600, 39.9480]
+      }
+    }
+  ]
+} 

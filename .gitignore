@@ -34,3 +34,60 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# Cypress screenshots
+cypress/screenshots/
+cypress/screenshots/**/*
+
+# Cypress videos
+cypress/videos/
+cypress/videos/**/*
+
+# Cypress downloads
+cypress/downloads/
+cypress/downloads/**/*
+
+# Cypress logs
+cypress/logs/
+cypress/logs/**/*
+
+# Cypress test results
+cypress/results/
+cypress/results/**/*
+
+# Cypress coverage reports
+cypress/coverage/
+cypress/coverage/**/*
+
+# Cypress test artifacts
+cypress/artifacts/
+cypress/artifacts/**/*
+
+# Cypress cache
+cypress/cache/
+cypress/cache/**/*
+
+# Cypress temp files
+cypress/temp/
+cypress/temp/**/*
+
+# Cypress reports
+cypress/reports/
+cypress/reports/**/*
+
+# Cypress fixtures (if you want to ignore test data)
+# cypress/fixtures/test-data/
+# cypress/fixtures/test-data/**/*
+
+# Node modules in cypress directory (if any)
+cypress/node_modules/
+
+# Environment files
+cypress/.env
+cypress/.env.local
+cypress/.env.test
+
+# Cypress configuration backups
+cypress.config.js.bak
+cypress.config.ts.bak
